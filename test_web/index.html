@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICONIX</title>
+    <link rel="icon" type="image/png" href="iconix_red_tiger_logo.png">
+    <meta name="description"
+        content="Team & Clan Biolink Hub. Member profiles, social media links, and background music.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- App Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
+</head>
+
+<body class="theme-dark">
+
+    <!-- Interactive Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="bg-overlay"></div>
+
+    <!-- Audio Element -->
+    <audio id="bg-music" loop preload="auto">
+        <source
+            src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"
+            type="audio/mpeg">
+    </audio>
+
+    <!-- ENTRY OVERLAY SCREEN (Click to Enter) -->
+    <div id="entry-screen" class="entry-screen">
+        <div class="entry-content">
+            <div class="entry-avatar-glow">
+                <img src="iconix_red_tiger_logo.png" alt="ICONIX Logo" class="entry-avatar" id="entry-avatar-img">
+            </div>
+            <h1 class="entry-title" id="entry-title-text">ICONIX</h1>
+            <p class="entry-subtitle">Members Biolink & Social Hub</p>
+            <div class="click-prompt">
+                <i class="fa-solid fa-volume-high animated-icon"></i>
+                <span>Click anywhere to enter</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="main-app" class="main-wrapper hidden">
+
+        <!-- PENDING APPROVAL NOTICE BANNER -->
+        <div id="pending-approval-banner" class="pending-notice-banner hidden">
+            <i class="fa-solid fa-hourglass-half animated-spin"></i>
+            <div class="notice-text">
+                <strong>Account Pending Admin Approval:</strong> Your Discord profile is currently awaiting review by
+                the Admin. Once approved, your bio link card will automatically appear on the public roster. You can
+                still edit your profile below!
+            </div>
+        </div>
+
+        <!-- TOP BAR & HEADER -->
+        <header class="chanler-top-bar">
+            <div class="top-bar-left">
+                <!-- Auth Button -->
+                <button class="login-discord-btn" id="login-discord-btn">
+                    <i class="fa-brands fa-discord"></i>
+                    <span>Login</span>
+                </button>
+
+                <!-- Logged In User Pill -->
+                <div class="user-profile-pill hidden" id="user-profile-pill">
+                    <img src="assets/images/avatar.png" id="user-pill-avatar" alt="Avatar" class="pill-avatar">
+                    <div class="pill-info">
+                        <span class="pill-name" id="user-pill-name">User</span>
+                        <span class="pill-badge" id="user-pill-badge">Discord Member</span>
+                    </div>
+                    <button class="pill-btn pill-edit-btn" id="user-pill-edit-btn" title="Edit My Profile">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button class="pill-btn pill-logout-btn" id="user-pill-logout-btn" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CENTER BRAND LOGO (ICONIX RED TIGER HEADER) -->
+            <div class="chanler-logo-box">
+                <img src="iconix_red_tiger_logo.png" alt="ICONIX" class="chanler-brand-logo-img">
+                <h1 class="chanler-logo-title iconix-red-text">ICONIX</h1>
+            </div>
+
+            <div class="top-bar-right">
+                <div class="search-box chanler-search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="member-search-input" placeholder="Search squad member...">
+                </div>
+
+                <!-- Admin Side Trigger Button -->
+                <button class="admin-top-btn" id="admin-trigger-btn" title="Admin Control Panel">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Admin</span>
+                    <span id="admin-badge-count" class="admin-badge hidden">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- MEMBER PROFILE CARDS GRID (chanler.xyz style) -->
+        <main class="chanler-grid-wrapper">
+            <div class="chanler-cards-grid" id="chanler-cards-grid">
+                <!-- Dynamic Member Cards Injected via JS -->
+            </div>
+        </main>
+
+    </div>
+
+    <!-- HIGH-END MEMBER PROFILE VIEW MODAL (Opens when clicking any card) -->
+    <div id="profile-view-modal" class="modal-overlay hidden">
+        <!-- Fullscreen Background image container -->
+        <div id="dynamic-modal-bg"
+            style="position: absolute; inset: 0; z-index: -1; background-size: cover; background-position: center;">
+        </div>
+
+        <div class="modal-card profile-view-card animate-card">
+
+            <!-- TOP BANNER COVER IMAGE WITH ANIMATED GRADIENT -->
+            <div class="profile-modal-banner">
+                <button class="close-modal-btn modal-banner-close" id="close-profile-modal-btn">&times;</button>
+            </div>
+
+            <!-- AVATAR HEADER OVERLAPPING BANNER -->
+            <div class="avatar-wrapper profile-modal-avatar-wrapper">
+                <div class="neon-butterfly-ring">
+                    <div class="animated-butterfly b1"><i class="fa-solid fa-butterfly"></i></div>
+                    <div class="animated-butterfly b2"><i class="fa-solid fa-sparkles"></i></div>
+                </div>
+                <img src="assets/images/default_avatar.svg" alt="Avatar" id="modal-profile-avatar"
+                    class="profile-avatar">
+                <img src="" alt="Decoration" id="modal-profile-decoration" class="avatar-decoration hidden">
+                <div class="status-indicator dnd" id="modal-profile-status-badge">
+                    <i class="fa-solid fa-minus"></i>
+                </div>
+            </div>
+
+            <div class="user-info">
+                <h1 class="user-name" id="modal-profile-name">Sakura</h1>
+                <p class="user-handle" id="modal-profile-handle">@skrwr1d</p>
+
+                <div class="user-badges" id="modal-profile-badges">
+                    <!-- Badges -->
+                </div>
+
+                <div class="discord-status-pill">
+                    <span class="status-dot dnd-dot" id="modal-profile-status-dot"></span>
+                    <span class="status-text" id="modal-profile-status-text">Do Not Disturb</span>
+                </div>
+
+                <div class="bio-quote-box">
+                    <span class="quote-text" id="modal-profile-bio">*rise | 🖤🎶</span>
+                </div>
+            </div>
+
+            <!-- EMBEDDED MUSIC PLAYER WIDGET IN MODAL -->
+            <div class="modal-music-player">
+                <div class="modal-audio-left">
+                    <div class="audio-visualizer-mini modal-visualizer">
+                        <span class="bar bar1"></span>
+                        <span class="bar bar2"></span>
+                        <span class="bar bar3"></span>
+                        <span class="bar bar4"></span>
+                    </div>
+                    <div class="modal-track-details">
+                        <span class="track-title" id="modal-track-title">Playing Track</span>
+                        <span class="track-artist">Member Background Audio</span>
+                    </div>
+                </div>
+                <div class="modal-audio-controls">
+                    <button class="icon-btn modal-play-btn" id="modal-play-pause-btn" title="Toggle Music">
+                        <i class="fa-solid fa-pause" id="modal-play-icon"></i>
+                    </button>
+                    <input type="range" id="modal-volume-slider" min="0" max="1" step="0.01" value="0.5" title="Volume">
+                </div>
+            </div>
+
+            <!-- DYNAMIC SPOTIFY LISTENING STATUS (Via Lanyard API) -->
+            <div id="modal-spotify-status" class="spotify-status-card hidden">
+                <div class="spotify-art-wrapper">
+                    <img src="" alt="Album Art" class="spotify-album-art" id="spotify-album-art">
+                    <div class="spotify-badge-icon"><i class="fa-solid fa-music"></i></div>
+                </div>
+                <div class="spotify-details">
+                    <span class="spotify-label">LISTENING TO SPOTIFY</span>
+                    <span class="spotify-track" id="spotify-track-name">Track Name</span>
+                    <span class="spotify-artist" id="spotify-artist-name">by Artist</span>
+                </div>
+            </div>
+
+            <!-- CONNECTED SOCIAL MEDIA LINKS -->
+            <div class="social-links-container">
+                <h3 class="social-title">Connected Profiles & Links</h3>
+                <div class="social-buttons-grid" id="modal-profile-socials">
+                    <!-- Dynamic Social Links -->
+                </div>
+            </div>
+
+            <!-- QUICK ACTIONS (shown only to the profile owner when logged in) -->
+            <div class="card-footer-actions" id="modal-footer-actions">
+                <button class="action-btn copy-discord-id" id="modal-copy-discord-btn">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Copy Handle</span>
+                </button>
+                <button class="action-btn share-link" id="modal-share-btn">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span>Share Profile Link</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS / MEMBER EDITOR MODAL -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-user-pen"></i> Edit Members & Social Links</h2>
+                <button class="close-modal-btn" id="close-settings-btn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="tab-select-member">Select Member</button>
+                    <button class="tab-btn" data-tab="tab-profile">Profile & Info</button>
+                    <button class="tab-btn" data-tab="tab-socials">Social Media Links</button>
+                    <button class="tab-btn" data-tab="tab-audio">Music & Theme</button>
+                </div>
+
+                <!-- TAB 1: SELECT / ADD MEMBER -->
+                <div class="tab-content active" id="tab-select-member">
+                    <div class="member-select-header">
+                        <label>Pumili ng Member na i-e-edit:</label>
+                        <button class="btn btn-sm btn-primary" id="modal-add-member-btn"><i
+                                class="fa-solid fa-user-plus"></i> + Add New Member</button>
+                    </div>
+                    <div class="modal-member-selector-grid" id="modal-member-selector-grid">
+                        <!-- Dynamic selector cards -->
+                    </div>
+                </div>
+
+                <!-- TAB 2: PROFILE INFO -->
+                <div class="tab-content" id="tab-profile">
+                    <div class="form-group">
+                        <label for="input-display-name">Display Name</label>
+                        <input type="text" id="input-display-name" placeholder="e.g. Sakura">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-handle">Username / Handle</label>
+                        <input type="text" id="input-handle" placeholder="e.g. @skrwr1d">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-avatar-file"><i class="fa-solid fa-image"></i> Upload Avatar Picture from
+                            Downloads</label>
+                        <div class="custom-file-upload">
+                            <input type="file" id="input-avatar-file" accept="image/*" style="display:none;">
+                            <button type="button" class="btn btn-secondary" id="browse-avatar-btn"
+                                style="width:100%; text-align:center; padding:10px;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Choose Image File from Downloads
+                            </button>
+                            <span id="selected-avatar-name"
+                                style="font-size:0.78rem; color:var(--primary-pink); margin-top:4px; display:block; text-align:center;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="input-avatar-url"><i class="fa-solid fa-link"></i> Or Paste Avatar Image Link
+                            (URL)</label>
+                        <input type="text" id="input-avatar-url"
+                            placeholder="https://... or assets/images/default_avatar.svg">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-status">Discord Status</label>
+                        <select id="input-status">
+                            <option value="dnd">🔴 Do Not Disturb</option>
+                            <option value="online">🟢 Online</option>
+                            <option value="idle">🌙 Idle</option>
+                            <option value="offline">⚪ Offline</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-status-text">Status Message</label>
+                        <input type="text" id="input-status-text"
+                            placeholder="e.g. Listening to Spotify / Do Not Disturb">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-bio">Bio Quote / Description</label>
+                        <textarea id="input-bio" rows="2" placeholder="e.g. *rise | 🖤🎶"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-badges">Badges (Comma Separated)</label>
+                        <input type="text" id="input-badges" placeholder="ICONIX, Creator, Verified">
+                    </div>
+                </div>
+
+                <!-- TAB 3: SOCIAL MEDIA LINKS -->
+                <div class="tab-content" id="tab-socials">
+                    <p class="tab-desc">Ilagay dito ang official social media links (Twitch, Instagram, YouTube, TikTok)
+                        ng member:</p>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-twitch color-tw"></i> Twitch Channel Link</label>
+                        <input type="url" id="input-tw" placeholder="https://twitch.tv/channel">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-instagram color-ig"></i> Instagram Link</label>
+                        <input type="url" id="input-ig" placeholder="https://instagram.com/yourhandle">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-youtube color-yt"></i> YouTube Channel Link</label>
+                        <input type="url" id="input-yt" placeholder="https://youtube.com/@channel">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-tiktok color-tt"></i> TikTok Profile Link</label>
+                        <input type="url" id="input-tt" placeholder="https://tiktok.com/@yourhandle">
+                    </div>
+                </div>
+
+                <!-- TAB 4: AUDIO & THEME -->
+                <div class="tab-content" id="tab-audio">
+                    <div class="form-group">
+                        <label for="input-music-file"><i class="fa-solid fa-folder-open"></i> Upload MP3 from PC /
+                            Downloads Folder</label>
+                        <div class="custom-file-upload">
+                            <input type="file" id="input-music-file" accept="audio/*" style="display:none;">
+                            <button type="button" class="btn btn-secondary" id="browse-mp3-btn"
+                                style="width:100%; text-align:center; padding:12px;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Choose MP3 File from Downloads
+                            </button>
+                            <span id="selected-file-name"
+                                style="font-size:0.78rem; color:var(--primary-pink); margin-top:6px; display:block; text-align:center;"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="input-music-url"><i class="fa-solid fa-link"></i> Or Paste Custom MP3 Link
+                            (URL)</label>
+                        <input type="text" id="input-music-url"
+                            placeholder="assets/music/my_song.mp3  o  https://.../song.mp3">
+                    </div>
+
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+
+                    <div class="form-group">
+                        <label for="input-banner-file"><i class="fa-solid fa-image"></i> Upload Profile Background /
+                            Banner (GIF/PNG/JPG)</label>
+                        <div class="custom-file-upload">
+                            <input type="file" id="input-banner-file" accept="image/*" style="display:none;">
+                            <button type="button" class="btn btn-secondary" id="browse-banner-btn"
+                                style="width:100%; text-align:center; padding:12px;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Choose Banner File
+                            </button>
+                            <span id="selected-banner-name"
+                                style="font-size:0.78rem; color:var(--primary-pink); margin-top:6px; display:block; text-align:center;"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="input-banner-url">
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="delete-member-btn"><i class="fa-solid fa-trash"></i> Delete
+                    Member</button>
+                <button class="btn btn-secondary" id="reset-settings-btn">Reset Defaults</button>
+                <button class="btn btn-primary" id="save-settings-btn"><i class="fa-solid fa-floppy-disk"></i> Save &
+                    Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DISCORD LOGIN MODAL -->
+    <div id="discord-auth-modal" class="modal-overlay hidden">
+        <div class="modal-card discord-modal-card">
+            <div class="modal-header discord-modal-header">
+                <h2><i class="fa-brands fa-discord"></i> Discord Access Portal</h2>
+                <button class="close-modal-btn" id="close-discord-auth-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <!-- LOGIN SECTION -->
+                <div class="auth-section-auth" style="margin-bottom: 15px;">
+                    <h3 style="margin-bottom: 15px; color: var(--primary-pink);"><i
+                            class="fa-solid fa-right-to-bracket"></i> Login Existing Account</h3>
+                    <p class="discord-modal-desc" style="margin-bottom: 10px;">
+                        Mag-login gamit ang iyong Discord account para ma-access ang iyong profile.
+                    </p>
+                    <a href="api.php?action=discord_oauth_redirect" class="btn btn-discord-auth"
+                        style="display: block; text-align: center; text-decoration: none; margin-top: 15px;">
+                        <i class="fa-solid fa-right-to-bracket"></i> Authenticate with Discord
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="admin-login-modal" class="modal-overlay hidden">
+        <div class="modal-card admin-auth-card">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-shield-halved"></i> Admin Login</h2>
+                <button class="close-modal-btn" id="close-admin-login-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="admin-login-desc">Enter the Admin Username & Password to access the member approvals queue and
+                    settings.</p>
+                <div class="form-group">
+                    <label for="admin-user-input"><i class="fa-solid fa-user"></i> Admin Username</label>
+                    <input type="text" id="admin-user-input" placeholder="Default: admin">
+                </div>
+                <div class="form-group">
+                    <label for="admin-pass-input"><i class="fa-solid fa-key"></i> Admin Password</label>
+                    <input type="password" id="admin-pass-input" placeholder="Default: admin123">
+                </div>
+                <button class="btn btn-primary btn-block" id="submit-admin-login-btn"
+                    style="width:100%; margin-top:10px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login as Admin
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD MODAL (Admin Approval & Management Center) -->
+    <div id="admin-dashboard-modal" class="modal-overlay hidden">
+        <div class="modal-card admin-dashboard-card">
+            <div class="modal-header admin-header-bg">
+                <div class="admin-header-title">
+                    <h2><i class="fa-solid fa-crown"></i> ICONIX Admin Management Panel</h2>
+                    <span class="admin-status-pill"><i class="fa-solid fa-circle"></i> Authenticated Admin</span>
+                </div>
+                <button class="close-modal-btn" id="close-admin-dashboard-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <!-- ADMIN STATS HEADER -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card pending-stat">
+                        <div class="stat-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="stat-pending-count">0</span>
+                            <span class="stat-label">Pending Approval</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card approved-stat">
+                        <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="stat-approved-count">0</span>
+                            <span class="stat-label">Approved Members</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card total-stat">
+                        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="stat-total-count">0</span>
+                            <span class="stat-label">Total Accounts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADMIN TAB NAVIGATION -->
+                <div class="tab-nav admin-tabs" style="margin-bottom: 20px;">
+                    <button class="tab-btn active" data-admin-tab="admin-tab-pending">
+                        <i class="fa-solid fa-user-clock"></i> Pending Approvals (<span
+                            id="admin-tab-pending-num">0</span>)
+                    </button>
+                    <button class="tab-btn" data-admin-tab="admin-tab-register">
+                        <i class="fa-solid fa-user-plus"></i> Register Member
+                    </button>
+                    <button class="tab-btn" data-admin-tab="admin-tab-roster">
+                        <i class="fa-solid fa-users-gear"></i> All Members Roster
+                    </button>
+                    <button class="tab-btn" data-admin-tab="admin-tab-settings">
+                        <i class="fa-solid fa-sliders"></i> Settings
+                    </button>
+                </div>
+
+                <!-- TAB 1: PENDING APPROVAL QUEUE -->
+                <div class="admin-tab-content active" id="admin-tab-pending">
+                    <div class="pending-queue-list" id="admin-pending-queue-list">
+                        <!-- Dynamic Pending Registrations Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- TAB: REGISTER MEMBER -->
+                <div class="admin-tab-content" id="admin-tab-register">
+                    <div class="auth-section-register"
+                        style="max-width: 500px; margin: 0 auto; background: var(--bg-hover); padding: 20px; border-radius: 12px;">
+                        <h3 style="margin-bottom: 15px; color: #22c55e;"><i class="fa-solid fa-user-plus"></i> Admin
+                            &mdash; Register Client</h3>
+                        <p class="discord-modal-desc" style="margin-bottom: 15px;">
+                            Register a new client directly to the database. They can be pushed to pending or approved in
+                            the next tab later.
+                        </p>
+                        <form id="discord-register-form" onsubmit="return false;">
+                            <div class="form-group">
+                                <label for="dc-input-display-name"><i class="fa-solid fa-user"></i> Display Name / Clan
+                                    Alias</label>
+                                <input type="text" id="dc-input-display-name" placeholder="e.g. Alex_Viper">
+                            </div>
+                            <div class="form-group">
+                                <label for="dc-input-handle"><i class="fa-brands fa-discord"></i> Discord Tag /
+                                    Username</label>
+                                <input type="text" id="dc-input-handle" placeholder="e.g. @alex_viper or alex#1234">
+                            </div>
+                            <div class="form-group">
+                                <label for="dc-input-avatar"><i class="fa-solid fa-image"></i> Upload Avatar
+                                    Picture</label>
+                                <div class="custom-file-upload">
+                                    <input type="file" id="dc-input-avatar" accept="image/*" style="display:none;">
+                                    <button type="button" class="btn btn-secondary" id="browse-dc-avatar-btn"
+                                        style="width:100%; text-align:center; padding:10px;">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Choose Image File
+                                    </button>
+                                    <span id="selected-dc-avatar-name"
+                                        style="font-size:0.78rem; color:var(--primary-pink); margin-top:4px; display:block; text-align:center;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dc-input-bio"><i class="fa-solid fa-quote-left"></i> Profile Bio /
+                                    Quote</label>
+                                <textarea id="dc-input-bio" rows="2"
+                                    placeholder="e.g. ICONIX Member | Gamer & Streamer 🎮"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-discord-auth" id="submit-discord-register-btn"
+                                style="background:#22c55e; border-color:#22c55e; margin-top: 15px; width: 100%;">
+                                <i class="fa-solid fa-paper-plane"></i> Register Client
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- TAB 2: ALL MEMBERS ROSTER -->
+                <div class="admin-tab-content" id="admin-tab-roster">
+                    <div class="table-responsive">
+                        <table class="members-table">
+                            <thead>
+                                <tr>
+                                    <th>Member Info</th>
+                                    <th>Discord Handle</th>
+                                    <th>Approval Status</th>
+                                    <th>Registration Date</th>
+                                    <th>Admin Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-roster-tbody">
+                                <!-- Dynamic Roster Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 3: ADMIN SETTINGS -->
+                <div class="admin-tab-content" id="admin-tab-settings">
+                    <div class="admin-settings-section">
+                        <h3><i class="fa-solid fa-shield-halved"></i> Registration & Approval Settings</h3>
+                        <div class="toggle-setting-box">
+                            <div class="setting-info">
+                                <strong>Require Admin Approval for Discord Registrations</strong>
+                                <p>When turned ON, new users who link their Discord must be manually approved by Admin
+                                    before appearing on the website roster.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="setting-require-approval" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <h3 style="margin-top: 25px;"><i class="fa-solid fa-lock"></i> Change Admin Password</h3>
+                        <div class="form-group">
+                            <label for="setting-new-admin-pass">New Admin Password</label>
+                            <input type="password" id="setting-new-admin-pass"
+                                placeholder="Enter new password to change">
+                        </div>
+
+                        <h3 style="margin-top: 25px;"><i class="fa-brands fa-discord"></i> Discord OAuth2 App
+                            Credentials (Optional)</h3>
+                        <div class="form-group">
+                            <label for="setting-discord-client-id">Discord Application Client ID</label>
+                            <input type="text" id="setting-discord-client-id" placeholder="e.g. 123456789012345678">
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-discord-client-secret">Discord Application Client Secret</label>
+                            <input type="password" id="setting-discord-client-secret"
+                                placeholder="Your secret (hidden)">
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-discord-redirect-uri">Discord OAuth Redirect URI</label>
+                            <input type="text" id="setting-discord-redirect-uri"
+                                placeholder="https://iconix-members101.page.gd/api.php?action=discord_callback">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer admin-modal-footer">
+                <button class="btn btn-secondary" id="admin-logout-btn"><i class="fa-solid fa-right-from-bracket"></i>
+                    Logout Admin</button>
+                <button class="btn btn-primary" id="admin-save-settings-btn"><i class="fa-solid fa-floppy-disk"></i>
+                    Save Admin Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/particles.js"></script>
+    <script src="assets/js/audio.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>

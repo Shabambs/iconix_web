@@ -1,0 +1,8 @@
+{
+    "admin_username": "admin",
+    "admin_password": "admin123",
+    "require_approval": true,
+    "discord_client_id": "1542754493282652180",
+    "discord_client_secret": "_ekdO0ct-U4u85cZT968mK4CIF2lVlme",
+    "discord_redirect_uri": "https://iconix-members101.page.gd/api.php?action=discord_callback"
+}

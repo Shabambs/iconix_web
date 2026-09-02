@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICONIX - Affiliate Registration Portal</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .join-panel {
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 60, 100, 0.15);
+            padding: 50px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 30, 80, 0.1);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .join-panel img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 2px solid var(--primary-pink);
+            box-shadow: 0 0 20px rgba(255, 30, 80, 0.3);
+        }
+
+        .join-panel h1 {
+            color: var(--primary-pink);
+            margin-bottom: 10px;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .join-panel p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .btn-join {
+            background: var(--discord-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.3);
+        }
+
+        .btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5);
+            background: #4752c4;
+        }
+
+        .return-link {
+            display: inline-block;
+            margin-top: 25px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .return-link:hover {
+            color: var(--primary-pink);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Background Particles -->
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="join-panel">
+        <img src="iconix_red_tiger_logo.png" alt="ICONIX Logo" onerror="this.src='assets/images/default_avatar.svg'">
+        <h1>Join ICONIX</h1>
+        <p>You have been invited to register your profile on the ICONIX Biolink Hub. Click below to securely connect your Discord account.</p>
+        
+        <a href="api.php?action=discord_oauth_redirect&source=join" class="btn-join">
+            <i class="fa-brands fa-discord"></i> Link Discord & Register
+        </a>
+        
+        <a href="index.html" class="return-link"><i class="fa-solid fa-arrow-left"></i> Return to main hub</a>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="assets/js/particles.js"></script>
+    <script src="assets/js/join.js"></script>
+</body>
+</html>
