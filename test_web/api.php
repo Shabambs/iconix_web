@@ -174,9 +174,7 @@ function makeCurlRequest($url, $method = 'GET', $postData = null, $headers = [])
         CURLOPT_TIMEOUT        => 20,
         CURLOPT_CONNECTTIMEOUT => 10,
         // Force IPv4 — IPv6 DNS often fails on local XAMPP/Windows
-        CURLOPT_IPRESOLVE      => CURL_IPRESOLVE_V4,
-        // Use Google Public DNS to resolve hostnames
-        CURLOPT_DNS_SERVERS    => '8.8.8.8,8.8.4.4',
+        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => false,
         CURLOPT_USERAGENT      => 'ICONIX-Bot/1.0 (PHP/' . PHP_VERSION . ')',
