@@ -32,7 +32,22 @@ if (!file_exists($settings_file)) {
     file_put_contents($settings_file, json_encode($default_settings, JSON_PRETTY_PRINT));
     $settings = $default_settings;
 } else {
-    $settings = array_merge($default_settings, json_decode(file_get_contents($settings_file), true) ?: []);
+    $settings = array_merge(
+        $default_settings,
+        json_decode(file_get_contents($settings_file), true) ?: []
+    );
+}
+
+if (getenv('DISCORD_CLIENT_ID') !== false && getenv('DISCORD_CLIENT_ID') !== '') {
+    $settings['discord_client_id'] = getenv('DISCORD_CLIENT_ID');
+}
+
+if (getenv('DISCORD_CLIENT_SECRET') !== false && getenv('DISCORD_CLIENT_SECRET') !== '') {
+    $settings['discord_client_secret'] = getenv('DISCORD_CLIENT_SECRET');
+}
+
+if (getenv('DISCORD_REDIRECT_URI') !== false && getenv('DISCORD_REDIRECT_URI') !== '') {
+    $settings['discord_redirect_uri'] = getenv('DISCORD_REDIRECT_URI');
 }
 
 // Default initial members
